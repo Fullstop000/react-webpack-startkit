@@ -1,19 +1,13 @@
-const path = require('path')
-const webpack = require('webpack')
+const path = require('path');
+const webpack = require('webpack');
 
-const ROOT_PATH = path.resolve(__dirname)
-const APP_PATH = path.resolve(ROOT_PATH, 'src')
-const BUILD_PATH = path.resolve(ROOT_PATH, 'build')
+const ROOT_PATH = path.resolve(__dirname);
+const APP_PATH = path.resolve(ROOT_PATH, 'src');
+const BUILD_PATH = path.resolve(ROOT_PATH, 'build');
 
-const HtmlwebpackPlugin = require('html-webpack-plugin')
+const HtmlwebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-    /** HMR support */
     entry: [
-        'react-hot-loader/patch',
-        'webpack-dev-server/client?http://localhost:8080',
-        // bundle the client for webpack-dev-server
-        // and connect to the provided endpoint
-        'webpack/hot/only-dev-server',
         path.resolve(APP_PATH, 'index.jsx'),
     ],
     output: {
@@ -23,20 +17,27 @@ module.exports = {
     devtool: 'eval-source-map',
     devServer: {
         contentBase: './build',
+        compress: true,
         historyApiFallback: true,
-        hot: true,
-        progress: true
+        hot: true
+        // progress: true
     },
     module: {
-        preLoaders: [{
-            test: /\.(jsx|js)$/,
-            loader: 'eslint-loader',
-            exclude: /node_modules/
-        }],
-        loaders:[
+        // webpack2 use 'rules' instead of 'loaders'
+        rules: [
+            // preloaders are included in rules by using 'enforece:'pre'
+            {
+                enforce: 'pre',
+                test: /\.(jsx|js)$/,
+                loader: 'eslint-loader',
+                query: {
+                    configFile: './.eslintrc.json'
+                },
+                exclude: [/node_modules/]
+            },
             {
                 test:/\.(jsx|js)$/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 include:APP_PATH
             },
             {
@@ -54,17 +55,13 @@ module.exports = {
         ]
     },
     resolve:{
-        extensions:['','.js','.jsx']
+        extensions: ['.js', '.jsx']
     },
-    postcss:[
-        require('autoprefixer')
-    ],
     plugins:[
         new webpack.HotModuleReplacementPlugin(),
         // you can also use your own index.html
         new HtmlwebpackPlugin({
             title: 'A Simple React App'
-        })
-
+        }),
     ]
-}
+};
