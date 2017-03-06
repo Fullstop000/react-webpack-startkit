@@ -8,7 +8,7 @@ A simplest app built by [Webpack2](http://webpack.js.org/) using [React](https:/
 * Open `localhost:8080`
 * Enjoy the React HMR
 
-# Lisence
+# License
 [MIT Licensed.](https://opensource.org/licenses/MIT) Copyright (c) 2017 Fullstop000.
 
 
